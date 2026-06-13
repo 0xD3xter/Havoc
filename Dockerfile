@@ -1,8 +1,13 @@
 # Ubuntu + Havoc Teamserver
 # Description: This docker file builds an Ubuntu 22.04 (current LTS) host, and builds the teamserver.
 # Usage: docker build -t havoc-docker . && docker run -it havoc-docker
-# Use the official Ubuntu 22.04 base image
-FROM ubuntu:latest
+# Use the official Ubuntu 22.04 base image.
+# Pinned to 22.04 on purpose: later releases (24.04+) no longer ship the
+# python3.10 apt packages used below, which would break the build.
+FROM ubuntu:22.04
+
+# Avoid interactive tzdata/keyboard prompts during apt installs.
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Set the working directory
 WORKDIR /5pider
@@ -42,6 +47,7 @@ RUN apt-get update && \
     qtdeclarative5-dev \
     golang-go \
     mingw-w64 \
+    libcap2-bin \
     nasm && \
     rm -rf /var/lib/apt/lists/*
 
@@ -55,6 +61,11 @@ RUN git clone https://github.com/HavocFramework/Havoc.git && \
 
 # If needed, copy any files to the container here.
 # COPY . /5pider
+
+# Teamserver management port (default in profiles/*.yaotl) and the
+# common HTTPS listener port. Adjust to match your C2 profile.
+EXPOSE 40056
+EXPOSE 443
 
 # Default spawn to bash when entering container.
 CMD ["/bin/bash"]
