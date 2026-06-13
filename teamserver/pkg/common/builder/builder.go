@@ -182,19 +182,21 @@ func NewBuilder(config BuilderConfig) *Builder {
 		// debug mode includes symbols
 		builder.compilerOptions.CFlags = []string{
 			"",
-			"-Os -fno-asynchronous-unwind-tables -masm=intel",
+			"-std=gnu11 -Os -fno-asynchronous-unwind-tables -masm=intel",
 			"-fno-ident -fpack-struct=8 -falign-functions=1",
 			"-ffunction-sections -fdata-sections -falign-jumps=1 -w",
-			"-falign-labels=1 -fPIC",
+			"-falign-labels=1 -fPIC -Wno-error=incompatible-pointer-types",
+			"-Wno-error=int-conversion -Wno-error=implicit-function-declaration",
 			"-Wl,--no-seh,--enable-stdcall-fixup,--gc-sections",
 		}
 	} else {
 		builder.compilerOptions.CFlags = []string{
 			"",
-			"-Os -fno-asynchronous-unwind-tables -masm=intel",
+			"-std=gnu11 -Os -fno-asynchronous-unwind-tables -masm=intel",
 			"-fno-ident -fpack-struct=8 -falign-functions=1",
 			"-s -ffunction-sections -fdata-sections -falign-jumps=1 -w",
-			"-falign-labels=1 -fPIC",
+			"-falign-labels=1 -fPIC -Wno-error=incompatible-pointer-types",
+			"-Wno-error=int-conversion -Wno-error=implicit-function-declaration",
 			"-Wl,-s,--no-seh,--enable-stdcall-fixup,--gc-sections",
 		}
 	}
